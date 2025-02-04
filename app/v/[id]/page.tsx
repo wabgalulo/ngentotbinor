@@ -40,7 +40,7 @@ export async function generateMetadata(
     }
 
     const file = data.result[0];
-    const title = `Bokep ${file.title} - ${SITENAME}`;
+    const title = `Bokep ${file.title}`;
     const description = `Video Bokep {file.title} di {SITENAME} Video Bokep Indo Bocil Ngentot Jilbab Smp Mama Viral`;
     const image = file.splash_img;
     const previousOgImages = (await parent).openGraph?.images || [];
@@ -82,12 +82,12 @@ export default async function Video({ params }: PageProps) {
     }
 
     const file = data.result[0];
-        const jsonLd2 = {
+	const jsonLd = {
         '@context': 'https://schema.org',
-        '@type': 'Article',
-        headline: `Bokep ${file.title} - ${SITENAME}`,
+        '@type': 'WebPage',
+        name: `Bokep ${file.title}`,
         image: file.splash_img,
-        description: `Video Bokep {file.title} di {SITENAME} Video Bokep Indo Bocil Ngentot Jilbab Smp Mama Viral`,
+        description: `Video Bokep ${file.title} di ${SITENAME} Video Bokep Indo Bocil Ngentot Jilbab Smp Mama Viral`,
         url: `https://ngentotbinor.pages.dev/v/${file.filecode}`,
         datePublished: new Date(
             file.uploaded + ".000Z"
@@ -100,44 +100,55 @@ export default async function Video({ params }: PageProps) {
                 '@type': 'Person',
                 name: 'admin',
                 url: 'https://ngentotbinor.pages.dev'
-              },
-        interactionStatistic: {
-            '@type': `InteractionCounter`,
-                userInteractionCount: `${file.views}`,
-            interactionType: {
-                '@type': `ReadAction`,
-                target: `https://ngentotbinor.pages.dev/v/${file.filecode}`
-            }  
+              }
         }
+        const jsonLd2 = {
+        '@context': 'https://schema.org',
+        '@type': 'Article',
+        headline: `Bokep ${file.title}`,
+        image: file.splash_img,
+        description: `Video Bokep ${file.title} di ${SITENAME} Video Bokep Indo Bocil Ngentot Jilbab Smp Mama Viral`,
+        url: `https://ngentotbinor.pages.dev/v/${file.filecode}`,
+        datePublished: new Date(
+            file.uploaded + ".000Z"
+        ).toISOString(),
+        publisher: {
+            '@type': 'Organization',
+            name: `${SITENAME}`,
+            logo: 'https://ngentotbinor.pages.dev/favicon.ico'},
+            author: {
+                '@type': 'Person',
+                name: 'admin',
+                url: 'https://ngentotbinor.pages.dev'
+              }
         }
-        const jsonLd3 = {
-            '@context': 'https://schema.org', 
-            '@type': 'Book', 
-            'name': `Bokep ${file.title} - ${SITENAME}`, 
-            'aggregateRating': {
-            '@type': 'AggregateRating',	
-                'ratingValue': '5',	
-                'ratingCount': `${file.views}`,	
-                'bestRating': '5',	
-                'worstRating': '1' }
-        }
+        
     return (
-        <div className="grid col-span-full gap-4 md:gap-4 md:mx-10">
+        <div className="grid col-span-full gap-4 md:gap-4 md:mx-10" itemProp="video" itemScope itemType="http://schema.org/VideoObject">
+<meta itemProp="author" content="admin" />
+<meta itemProp="name" content={`${file.title}`} />
+<meta itemProp="description" content={`Video Bokep ${file.title} di ${SITENAME} Video Bokep Indo Bocil Ngentot Jilbab Smp Mama Viral`} />
+<meta itemProp="duration" content={`${file.length}`} />
+<meta itemProp="thumbnailUrl" content={`${file.splash_img}`} />
+<meta itemProp="embedURL" content={`https://doodstream.com/e/${file.filecode}`} />
+<meta itemProp="uploadDate" content={`${new Date(
+            file.uploaded + ".000Z"
+        ).toISOString()}`} />
         <section>
         {/* Add JSON-LD to your page */}
         <script
           type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd2) }}
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
         />
         <script
           type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd3) }}
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd2) }}
         />
         {/* ... */}
         </section>
             <iframe
                 className="w-full h-[30vh] md:h-[55vh] lg:h-[70vh]"
-                src={`https://${upstream}/e/${file.filecode}`}
+                src={`https://doodstream.com/e/${file.filecode}`}
                 scrolling="no"
                 title={file.title}
                 frameBorder={0}
